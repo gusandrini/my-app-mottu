@@ -1,51 +1,141 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  TextInput,
+} from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import Header from "@/components/Header";
 import { useTheme } from "@/context/ThemeContext";
 import ScreenWrapper from "@/components/ScreenWrapper";
+import { getSetorById } from "@/api/setor";
 
 const PatioOptionsScreen = () => {
-  const navigation = useNavigation<any>();
   const route = useRoute<any>();
-  const { patio } = route.params || { patio: "Pátio não selecionado" };
+  const navigation = useNavigation<any>();
   const { theme } = useTheme();
+
+  const setorSelecionado = route.params?.patio;
+  const [setor, setSetor] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [motosFiltradas, setMotosFiltradas] = useState<any[]>([]);
+
+  useEffect(() => {
+    const carregarSetor = async () => {
+      try {
+        const data = await getSetorById(setorSelecionado.id);
+        setSetor(data);
+        setMotosFiltradas(data.motos || []);
+      } catch (err) {
+        console.error("Erro ao carregar setor:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (setorSelecionado?.id) carregarSetor();
+  }, [setorSelecionado]);
+
+  // Atualiza lista quando o usuário digita
+  useEffect(() => {
+    if (!setor) return;
+
+    const filtradas = (setor.motos || []).filter(
+      (m: any) =>
+        m.modelo.toLowerCase().includes(search.toLowerCase()) ||
+        m.placa.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setMotosFiltradas(filtradas);
+  }, [search, setor]);
+
+  if (loading) {
+    return (
+      <ScreenWrapper>
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: theme.background,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator size="large" color={theme.primary} />
+          <Text style={{ marginTop: 10, color: theme.text }}>
+            Carregando motos...
+          </Text>
+        </View>
+      </ScreenWrapper>
+    );
+  }
+
+  if (!setor) {
+    return (
+      <ScreenWrapper>
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: theme.background,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <Text style={{ color: theme.text }}>Nenhum setor encontrado.</Text>
+        </View>
+      </ScreenWrapper>
+    );
+  }
 
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <Header title="Opções do Pátio" />
+        <Header title={`Opções - ${setor.nome}`} />
 
         <Text style={[styles.subtitle, { color: theme.text }]}>
-          Pátio selecionado: {patio}
+          Motos disponíveis neste setor:
         </Text>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.primary }]}
-          onPress={() => navigation.navigate("SectorSelection")}
-        >
-          <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-            Ver motos do pátio
-          </Text>
-        </TouchableOpacity>
+        {/* 🔍 Barra de pesquisa */}
+        <TextInput
+          style={[
+            styles.input,
+            { backgroundColor: theme.card, color: theme.text, borderColor: theme.primary },
+          ]}
+          placeholder="Pesquisar por modelo ou placa..."
+          placeholderTextColor="#888"
+          value={search}
+          onChangeText={setSearch}
+        />
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.primary }]}
-          onPress={() => navigation.navigate("LocateMoto")}
-        >
-          <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-            Localizar moto pela placa
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.primary }]}
-          onPress={() => navigation.navigate("MotoWithoutPlate")}
-        >
-          <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-            Buscar moto sem placa (TRIATAG)
-          </Text>
-        </TouchableOpacity>
+        <FlatList
+          data={motosFiltradas}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[styles.card, { backgroundColor: theme.card, borderColor: theme.primary }]}
+              onPress={() => navigation.navigate("LocateMoto", { moto: item })}
+            >
+              <Text style={[styles.cardTitle, { color: theme.text }]}>
+                {item.modelo} - {item.placa}
+              </Text>
+              <Text style={{ color: theme.text }}>Ano: {item.ano}</Text>
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={
+            <Text style={[styles.emptyText, { color: theme.text }]}>
+              Nenhuma moto encontrada.
+            </Text>
+          }
+        />
       </View>
     </ScreenWrapper>
   );
@@ -54,8 +144,21 @@ const PatioOptionsScreen = () => {
 export default PatioOptionsScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, padding: 16 },
   subtitle: { fontSize: 18, marginBottom: 20, textAlign: "center" },
-  button: { paddingVertical: 15, borderRadius: 8, marginBottom: 15 },
-  buttonText: { fontSize: 16, textAlign: "center", fontWeight: "bold" },
+  input: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  card: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 12,
+  },
+  cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 6 },
+  emptyText: { textAlign: "center", marginTop: 20, fontSize: 16 },
 });
