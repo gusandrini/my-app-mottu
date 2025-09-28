@@ -1,19 +1,27 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import api from "@/services/api";  
+import api from "@/services/api";
 import { useTheme } from "@/context/ThemeContext";
 import ScreenWrapper from "@/components/ScreenWrapper";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<any>();
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   const [username, setUsername] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 🔑 LOGIN
   const handleLogin = async () => {
     if (!username || !senha) {
       Alert.alert("Erro", "Preencha usuário e senha");
@@ -22,16 +30,20 @@ const WelcomeScreen = () => {
 
     setLoading(true);
     try {
-      const response = await api.post("/autenticacao/login", {
-        username,
-        senha,
-      });
+      const response = await api.post("/autenticacao/login", { username, senha });
 
-      const token = response.data.token;
+      // ⚠️ Backend deve retornar { token, id, username }
+      const { token, id } = response.data;
+
       await AsyncStorage.setItem("token", token);
+      if (id) {
+        await AsyncStorage.setItem("userId", id.toString());
+      }
 
-      Alert.alert("Sucesso", "Login realizado!");
-      navigation.navigate("Home");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
     } catch (error: any) {
       console.error(error);
       Alert.alert("Erro", "Usuário ou senha inválidos");
@@ -40,42 +52,19 @@ const WelcomeScreen = () => {
     }
   };
 
-  // ✅ Cadastro
-  const handleRegister = async () => {
-    if (!username || !senha) {
-      Alert.alert("Erro", "Preencha usuário e senha");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await api.post("/autenticacao/cadastrar", {
-        username,
-        senha,
-      });
-
-      if (response.status === 201) {
-        Alert.alert("Sucesso", "Usuário cadastrado!");
-      } else {
-        Alert.alert("Erro", "Não foi possível cadastrar");
-      }
-    } catch (error: any) {
-      console.error(error);
-      Alert.alert("Erro", "Usuário já existe ou dados inválidos");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <ScreenWrapper>
-      <View style={styles.container}>
-        <Text style={[styles.title, { color: theme.text }]}>Login</Text>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <Text style={[styles.title, { color: theme.primary }]}>Bem-vindo(a) Mottu</Text>
 
         <TextInput
           style={[
             styles.input,
-            { backgroundColor: theme.card, color: theme.text, borderColor: theme.primary },
+            {
+              backgroundColor: theme.card,
+              color: theme.text,
+              borderColor: theme.primary,
+            },
           ]}
           placeholder="Usuário"
           placeholderTextColor="#888"
@@ -86,7 +75,11 @@ const WelcomeScreen = () => {
         <TextInput
           style={[
             styles.input,
-            { backgroundColor: theme.card, color: theme.text, borderColor: theme.primary },
+            {
+              backgroundColor: theme.card,
+              color: theme.text,
+              borderColor: theme.primary,
+            },
           ]}
           placeholder="Senha"
           placeholderTextColor="#888"
@@ -95,7 +88,6 @@ const WelcomeScreen = () => {
           onChangeText={setSenha}
         />
 
-        {/* Botão Login */}
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.primary }]}
           onPress={handleLogin}
@@ -103,27 +95,6 @@ const WelcomeScreen = () => {
         >
           <Text style={[styles.buttonText, { color: theme.buttonText }]}>
             {loading ? "Conectando..." : "Entrar"}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Botão Cadastro */}
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.secondary }]}
-          onPress={handleRegister}
-          disabled={loading}
-        >
-          <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-            {loading ? "Cadastrando..." : "Cadastrar"}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Botão Tema */}
-        <TouchableOpacity
-          style={[styles.themeButton, { borderColor: theme.primary }]}
-          onPress={toggleTheme}
-        >
-          <Text style={{ color: theme.text }}>
-            {isDark ? "Tema Claro" : "Tema Escuro"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -134,23 +105,36 @@ const WelcomeScreen = () => {
 export default WelcomeScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 30 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 30,
+  },
   input: {
-    width: "90%",
+    width: "100%",
     borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 10,
+    padding: 14,
     marginBottom: 15,
     fontSize: 16,
   },
   button: {
-    paddingVertical: 15,
-    borderRadius: 8,
-    width: "90%",
+    paddingVertical: 16,
+    borderRadius: 10,
+    width: "100%",
     alignItems: "center",
     marginTop: 10,
+    elevation: 2,
   },
   buttonText: { fontSize: 16, fontWeight: "bold" },
-  themeButton: { padding: 10, borderWidth: 1, borderRadius: 8, marginTop: 20 },
 });

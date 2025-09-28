@@ -23,7 +23,7 @@ const AppNavigator = () => {
       try {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          setInitialRoute("Home"); // ✅ se tem token, vai para Home
+          setInitialRoute("Home"); 
         } else {
           setInitialRoute("Welcome");
         }
