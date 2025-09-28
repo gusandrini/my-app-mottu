@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
       )}
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("Welcome")}
+        onPress={() => navigation.navigate("Home")}
         style={[styles.button, { backgroundColor: theme.secondary }]}
       >
         <Text style={[styles.buttonText, { color: theme.buttonText }]}>
