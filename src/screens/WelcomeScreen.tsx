@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "@/services/api";
 import { useTheme } from "@/context/ThemeContext";
 import ScreenWrapper from "@/components/ScreenWrapper";
+import { Ionicons } from "@expo/vector-icons";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<any>();
@@ -21,7 +22,7 @@ const WelcomeScreen = () => {
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔑 LOGIN
+  
   const handleLogin = async () => {
     if (!username || !senha) {
       Alert.alert("Erro", "Preencha usuário e senha");
@@ -32,7 +33,7 @@ const WelcomeScreen = () => {
     try {
       const response = await api.post("/autenticacao/login", { username, senha });
 
-      // ⚠️ Backend deve retornar { token, id, username }
+      
       const { token, id } = response.data;
 
       await AsyncStorage.setItem("token", token);
@@ -55,48 +56,63 @@ const WelcomeScreen = () => {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <Text style={[styles.title, { color: theme.primary }]}>Bem-vindo(a) Mottu</Text>
+       
+        <Text style={[styles.title, { color: theme.primary }]}>Bem-vindo(a) </Text>
+        <Text style={[styles.subtitle, { color: theme.text }]}>
+          Acesse sua conta para continuar
+        </Text>
 
-        <TextInput
+     
+        <View
           style={[
-            styles.input,
-            {
-              backgroundColor: theme.card,
-              color: theme.text,
-              borderColor: theme.primary,
-            },
+            styles.inputBox,
+            { backgroundColor: theme.card, borderColor: theme.primary },
           ]}
-          placeholder="Usuário"
-          placeholderTextColor="#888"
-          value={username}
-          onChangeText={setUsername}
-        />
+        >
+          <Ionicons name="person-outline" size={20} color={theme.primary} style={styles.icon} />
+          <TextInput
+            style={[styles.input, { color: theme.text }]}
+            placeholder="Usuário"
+            placeholderTextColor="#888"
+            value={username}
+            onChangeText={setUsername}
+          />
+        </View>
 
-        <TextInput
+        
+        <View
           style={[
-            styles.input,
-            {
-              backgroundColor: theme.card,
-              color: theme.text,
-              borderColor: theme.primary,
-            },
+            styles.inputBox,
+            { backgroundColor: theme.card, borderColor: theme.primary },
           ]}
-          placeholder="Senha"
-          placeholderTextColor="#888"
-          secureTextEntry
-          value={senha}
-          onChangeText={setSenha}
-        />
+        >
+          <Ionicons name="lock-closed-outline" size={20} color={theme.primary} style={styles.icon} />
+          <TextInput
+            style={[styles.input, { color: theme.text }]}
+            placeholder="Senha"
+            placeholderTextColor="#888"
+            secureTextEntry
+            value={senha}
+            onChangeText={setSenha}
+          />
+        </View>
 
+        
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.primary }]}
           onPress={handleLogin}
           disabled={loading}
         >
+          <Ionicons name="log-in-outline" size={20} color={theme.buttonText} />
           <Text style={[styles.buttonText, { color: theme.buttonText }]}>
             {loading ? "Conectando..." : "Entrar"}
           </Text>
         </TouchableOpacity>
+
+        
+        <Text style={[styles.footerText, { color: theme.text }]}>
+          🔒 Seus dados estão seguros no sistema Mottu
+        </Text>
       </View>
     </ScreenWrapper>
   );
@@ -108,33 +124,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 10,
+    textAlign: "center",
+    marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 15,
+    textAlign: "center",
     marginBottom: 30,
   },
-  input: {
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  button: {
-    paddingVertical: 16,
-    borderRadius: 10,
-    width: "100%",
+  inputBox: {
+    flexDirection: "row",
     alignItems: "center",
+    borderWidth: 2,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 16,
+  },
+  icon: { marginRight: 8 },
+  input: { flex: 1, paddingVertical: 12, fontSize: 16 },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 10,
     marginTop: 10,
-    elevation: 2,
+    elevation: 3,
+    gap: 8,
   },
   buttonText: { fontSize: 16, fontWeight: "bold" },
+  footerText: {
+    marginTop: 30,
+    fontSize: 13,
+    textAlign: "center",
+    fontStyle: "italic",
+  },
 });

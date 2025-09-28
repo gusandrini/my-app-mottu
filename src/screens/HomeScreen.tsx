@@ -31,25 +31,10 @@ const HomeScreen = () => {
   };
 
   const opcoes = [
-    {
-      id: "1",
-      titulo: "Selecionar Pátio",
-      icone: "business",
-      rota: "PatioSelection",
-    },
+    { id: "1", titulo: "Selecionar Pátio", icone: "business", rota: "PatioSelection" },
     { id: "2", titulo: "Localizar Moto", icone: "search", rota: "LocateMoto" },
-    {
-      id: "3",
-      titulo: "Selecionar Setor",
-      icone: "layers",
-      rota: "SectorSelection",
-    },
-    {
-      id: "4",
-      titulo: "Moto sem Placa",
-      icone: "barcode", // pode trocar o ícone se quiser
-      rota: "MotoWithoutPlate",
-    },
+    { id: "3", titulo: "Selecionar Setor", icone: "layers", rota: "SectorSelection" },
+    { id: "4", titulo: "Moto sem Placa", icone: "barcode", rota: "MotoWithoutPlate" },
     {
       id: "5",
       titulo: isDark ? "Tema Claro" : "Tema Escuro",
@@ -58,7 +43,6 @@ const HomeScreen = () => {
     },
     { id: "6", titulo: "Sair", icone: "log-out", rota: "Logout" },
   ];
-
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -76,7 +60,7 @@ const HomeScreen = () => {
         }
       }}
     >
-      <Ionicons name={item.icone as any} size={32} color={theme.primary} />
+      <Ionicons name={item.icone as any} size={36} color={theme.primary} />
       <Text style={[styles.cardText, { color: theme.text }]}>{item.titulo}</Text>
     </TouchableOpacity>
   );
@@ -84,8 +68,8 @@ const HomeScreen = () => {
   return (
     <ScreenWrapper>
       <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Bem-vindo ao Sistema Mottu 🚀
+        <Text style={[styles.title, { color: theme.primary }]}>
+          Bem-vindo ao Sistema Mottu
         </Text>
 
         <FlatList
@@ -109,29 +93,33 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1, padding: 20 },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 25,
     textAlign: "center",
+    letterSpacing: 0.5,
   },
-  grid: { paddingBottom: 20 },
+  grid: { paddingBottom: 30 },
   card: {
     flex: 1,
-    margin: 8,
-    padding: 20,
-    borderWidth: 1,
-    borderRadius: 12,
+    margin: 10,
+    padding: 22,
+    borderWidth: 2,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 3,
-    minHeight: 120,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    minHeight: 130,
   },
   cardText: {
-    marginTop: 10,
-    fontSize: 14,
-    fontWeight: "bold",
+    marginTop: 12,
+    fontSize: 16,
+    fontWeight: "600",
     textAlign: "center",
   },
 });

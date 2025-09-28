@@ -1,5 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -13,26 +14,25 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.primary }]}>
+      
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={[styles.button, { backgroundColor: theme.secondary }]}
+        style={styles.iconButton}
       >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-          Voltar
-        </Text>
+        <Ionicons name="arrow-back" size={24} color={theme.buttonText} />
       </TouchableOpacity>
+
 
       {title && (
         <Text style={[styles.title, { color: theme.buttonText }]}>{title}</Text>
       )}
 
+      
       <TouchableOpacity
         onPress={() => navigation.navigate("Home")}
-        style={[styles.button, { backgroundColor: theme.secondary }]}
+        style={styles.iconButton}
       >
-        <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-          Home
-        </Text>
+        <Ionicons name="home" size={24} color={theme.buttonText} />
       </TouchableOpacity>
     </View>
   );
@@ -43,26 +43,27 @@ export default Header;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4, 
-    shadowColor: "#000", 
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+    justifyContent: "space-between",
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    elevation: 6,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0,0,0,0.1)",
+    marginBottom: 30, 
   },
-  button: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-  },
-  buttonText: {
-    fontWeight: "bold",
-    fontSize: 14,
+  iconButton: {
+    backgroundColor: "rgba(255,255,255,0.15)",
+    padding: 10,
+    borderRadius: 50,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
   },
 });
