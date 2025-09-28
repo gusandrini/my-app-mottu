@@ -122,7 +122,6 @@ const PatioOptionsScreen = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={[styles.card, { backgroundColor: theme.card, borderColor: theme.primary }]}
-              onPress={() => navigation.navigate("LocateMoto", { moto: item })}
             >
               <Text style={[styles.cardTitle, { color: theme.text }]}>
                 {item.modelo} - {item.placa}

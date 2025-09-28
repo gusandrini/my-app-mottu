@@ -40,11 +40,17 @@ const HomeScreen = () => {
     { id: "2", titulo: "Localizar Moto", icone: "search", rota: "LocateMoto" },
     {
       id: "3",
+      titulo: "Selecionar Setor",
+      icone: "layers",
+      rota: "SectorSelection",
+    },
+    {
+      id: "4",
       titulo: isDark ? "Tema Claro" : "Tema Escuro",
       icone: isDark ? "sunny" : "moon",
       rota: "ToggleTheme",
     },
-    { id: "4", titulo: "Sair", icone: "log-out", rota: "Logout" },
+    { id: "5", titulo: "Sair", icone: "log-out", rota: "Logout" },
   ];
 
   const renderItem = ({ item }: any) => (
@@ -98,9 +104,9 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 25,
+    marginBottom: 20,
     textAlign: "center",
   },
   grid: { paddingBottom: 20 },
@@ -109,16 +115,16 @@ const styles = StyleSheet.create({
     margin: 8,
     padding: 20,
     borderWidth: 1,
-    borderRadius: 14,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 4,
-    minHeight: 130,
+    elevation: 3,
+    minHeight: 120,
   },
   cardText: {
     marginTop: 10,
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "bold",
     textAlign: "center",
   },
 });
