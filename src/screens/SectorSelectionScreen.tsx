@@ -8,8 +8,10 @@ const SectorSelectionScreen = () => {
   const { theme } = useTheme();
 
   const handleSelectSector = (sector: string) => {
-    Alert.alert("Setor selecionado", `Você escolheu: ${sector}`);
-    console.log("Setor selecionado:", sector);
+    Alert.alert(
+      "Atenção",
+      `Não há motos disponíveis no setor ${sector}. 🚫`
+    );
   };
 
   return (

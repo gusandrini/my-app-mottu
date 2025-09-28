@@ -46,12 +46,19 @@ const HomeScreen = () => {
     },
     {
       id: "4",
+      titulo: "Moto sem Placa",
+      icone: "barcode", // pode trocar o ícone se quiser
+      rota: "MotoWithoutPlate",
+    },
+    {
+      id: "5",
       titulo: isDark ? "Tema Claro" : "Tema Escuro",
       icone: isDark ? "sunny" : "moon",
       rota: "ToggleTheme",
     },
-    { id: "5", titulo: "Sair", icone: "log-out", rota: "Logout" },
+    { id: "6", titulo: "Sair", icone: "log-out", rota: "Logout" },
   ];
+
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
