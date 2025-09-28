@@ -18,7 +18,7 @@ export default ScreenWrapper;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingHorizontal: 20, // borda lateral
-    paddingVertical: 10,   // borda superior/inferior
+    paddingHorizontal: 20, 
+    paddingVertical: 10,   
   },
 });

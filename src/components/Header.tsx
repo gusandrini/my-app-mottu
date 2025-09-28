@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 15,
-    elevation: 4, // sombra no Android
-    shadowColor: "#000", // sombra no iOS
+    elevation: 4, 
+    shadowColor: "#000", 
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
