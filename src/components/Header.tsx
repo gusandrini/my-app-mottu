@@ -1,6 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 
 interface HeaderProps {
   title?: string;
@@ -8,17 +9,30 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title }) => {
   const navigation = useNavigation<any>();
+  const { theme } = useTheme();
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <Text style={styles.buttonText}>Voltar</Text>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={[styles.button, { backgroundColor: theme.secondary }]}
+      >
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+          Voltar
+        </Text>
       </TouchableOpacity>
 
-      {title && <Text style={styles.title}>{title}</Text>}
+      {title && (
+        <Text style={[styles.title, { color: theme.buttonText }]}>{title}</Text>
+      )}
 
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")} style={styles.button}>
-        <Text style={styles.buttonText}>Home</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Welcome")}
+        style={[styles.button, { backgroundColor: theme.secondary }]}
+      >
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+          Home
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -31,21 +45,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 15,
-    backgroundColor: "#26548b",
+    elevation: 4, // sombra no Android
+    shadowColor: "#000", // sombra no iOS
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   button: {
-    padding: 8,
-    backgroundColor: "#1d3d66",
-    borderRadius: 5,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
   },
   buttonText: {
-    color: "#fff",
     fontWeight: "bold",
+    fontSize: 14,
   },
   title: {
-    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },

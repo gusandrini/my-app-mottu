@@ -1,19 +1,27 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@/context/ThemeContext";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<any>();
+  const { theme, toggleTheme, isDark } = useTheme();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo ao Sistema Mottu</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.text }]}>Bem-vindo ao Sistema Mottu</Text>
 
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, { backgroundColor: theme.primary }]}
         onPress={() => navigation.navigate("PatioSelection")}
       >
-        <Text style={styles.buttonText}>Entrar</Text>
+        <Text style={[styles.buttonText, { color: theme.buttonText }]}>Entrar</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.toggle} onPress={toggleTheme}>
+        <Text style={{ color: theme.primary }}>
+          {isDark ? "🌙 Modo Escuro" : "☀️ Modo Claro"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -26,7 +34,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5F5F5",
     padding: 20,
   },
   title: {
@@ -34,17 +41,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 40,
     textAlign: "center",
-    color: "#333",
   },
   button: {
-    backgroundColor: "#26548b",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
+    marginBottom: 20,
   },
   buttonText: {
-    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  toggle: {
+    marginTop: 20,
   },
 });

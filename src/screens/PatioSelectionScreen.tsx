@@ -2,25 +2,31 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Header from "@/components/Header";
+import { useTheme } from "@/context/ThemeContext";
 
 const PatioSelectionScreen = () => {
   const navigation = useNavigation<any>();
+  const { theme } = useTheme();
 
   const patios = ["Pátio Central", "Pátio Zona Norte", "Pátio Zona Sul"];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title="Selecione o Pátio" />
 
-      <Text style={styles.subtitle}>Escolha a localização:</Text>
+      <Text style={[styles.subtitle, { color: theme.text }]}>
+        Escolha a localização:
+      </Text>
 
       {patios.map((patio, index) => (
         <TouchableOpacity
           key={index}
-          style={styles.button}
+          style={[styles.button, { backgroundColor: theme.primary }]}
           onPress={() => navigation.navigate("PatioOptions", { patio })}
         >
-          <Text style={styles.buttonText}>{patio}</Text>
+          <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+            {patio}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -30,27 +36,8 @@ const PatioSelectionScreen = () => {
 export default PatioSelectionScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-    padding: 20,
-  },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "#333",
-  },
-  button: {
-    backgroundColor: "#26548b",
-    paddingVertical: 15,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
+  container: { flex: 1, padding: 20 },
+  subtitle: { fontSize: 18, marginBottom: 20, textAlign: "center" },
+  button: { paddingVertical: 15, borderRadius: 8, marginBottom: 15 },
+  buttonText: { fontSize: 16, textAlign: "center", fontWeight: "bold" },
 });

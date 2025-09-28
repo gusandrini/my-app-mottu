@@ -1,40 +1,36 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import Header from "@/components/Header";
+import { useTheme } from "@/context/ThemeContext";
 
 const SectorSelectionScreen = () => {
+  const { theme } = useTheme();
+
   const handleSelectSector = (sector: string) => {
-    // TODO: conectar com backend para listar motos desse setor
+    // TODO: conectar backend
     Alert.alert("Setor selecionado", `Você escolheu: ${sector}`);
     console.log("Setor selecionado:", sector);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title="Selecione o Setor" />
 
-      <Text style={styles.subtitle}>Escolha o setor do pátio:</Text>
+      <Text style={[styles.subtitle, { color: theme.text }]}>
+        Escolha o setor do pátio:
+      </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleSelectSector("Manutenção")}
-      >
-        <Text style={styles.buttonText}>Manutenção</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleSelectSector("Pendência")}
-      >
-        <Text style={styles.buttonText}>Pendência</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleSelectSector("Pronta para aluguel")}
-      >
-        <Text style={styles.buttonText}>Pronta para aluguel</Text>
-      </TouchableOpacity>
+      {["Manutenção", "Pendência", "Pronta para aluguel"].map((sector) => (
+        <TouchableOpacity
+          key={sector}
+          style={[styles.button, { backgroundColor: theme.primary }]}
+          onPress={() => handleSelectSector(sector)}
+        >
+          <Text style={[styles.buttonText, { color: theme.buttonText }]}>
+            {sector}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
@@ -42,27 +38,8 @@ const SectorSelectionScreen = () => {
 export default SectorSelectionScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-    padding: 20,
-  },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "#333",
-  },
-  button: {
-    backgroundColor: "#26548b",
-    paddingVertical: 15,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
+  container: { flex: 1, padding: 20 },
+  subtitle: { fontSize: 18, marginBottom: 20, textAlign: "center" },
+  button: { paddingVertical: 15, borderRadius: 8, marginBottom: 15 },
+  buttonText: { fontSize: 16, textAlign: "center", fontWeight: "bold" },
 });
